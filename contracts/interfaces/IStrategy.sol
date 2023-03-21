@@ -12,7 +12,7 @@ interface IStrategy {
     /// @notice Distributes the prize to the winner of the lottery.
     /// @dev Selects a random winner from the passed list of participants and transfer the prize to the winner.
     /// @return winner The winner of the lottery.
-    /// @return prize. The prize the winner will receive.
+    /// @return prize The prize the winner will receive.
     function distribute(address[] memory participants) external returns (address winner, uint256 prize);
 
     /// @notice Set the address of the YieldSourcePrizePool.
