@@ -17,8 +17,6 @@ interface IStrategy {
 
     /// @notice Set the address of the YieldSourcePrizePool.
     /// @dev Can only be called by PrizeStrategy's owner.
-    /// @return winner The winner of the lottery.
-    /// @return prize. The prize the winner will receive.
     function setPrizePool(IPrizePool _prizePool) external;
 
     /// @notice Returns the address of the PrizePool contract.
