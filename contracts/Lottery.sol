@@ -34,7 +34,7 @@ contract Lottery is ILottery {
     /// @dev It is deposited to the YieldSource in exchange of ATokens.
     IERC20 public token;
     
-    /// @notice The address of the prizePool.
+    /// @notice The address of the PrizePool.
     /// @dev The PrizePool is used by the lottery to deposit/withdraw tokens.
     IPrizePool public prizePool;
     
