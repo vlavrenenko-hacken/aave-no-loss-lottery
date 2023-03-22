@@ -25,23 +25,23 @@ interface IPrizePool {
     /// @dev Can only be called by the PrizeStrategy contract.
     function claimInterest() external;
 
-    /// @notice Returns the total balance.
-    /// @dev Returns the total number of deposited funds + any accrued interest.
+    /// @notice Return the total balance.
+    /// @dev Return the total number of deposited funds + any accrued interest.
     /// @return  The underlying balance of assets.
     function balance() external returns (uint256);
 
-    /// @notice Returns the number of shares a user received.
+    /// @notice Return the number of shares a user received.
     /// @dev The number of shares equals to the number of deposited tokens.
     /// @param user The address of the user, whose balance will be returned.
     /// @return The number of deposited assets by a user.
     function balanceOfUser(address user) external view returns(uint256);
 
-    /// @notice Returns the total interest.
+    /// @notice Return the total interest.
     /// @dev The total interest equals zero, if nothing was deposited.
     /// @return The total number of accrued interest.
     function getInterest() external view returns (uint256);
 
-    /// @notice Returns the address of the token used for deposits.
+    /// @notice Return the address of the token used for deposits.
     /// @return Address of the deposit token.
     function getToken() external view returns (IERC20);
 }
