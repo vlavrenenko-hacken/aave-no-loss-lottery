@@ -26,7 +26,6 @@ interface IYieldSource is IERC20 {
     /// @return True if operation was successful.
     function withdrawInterest(address to) external returns (bool);
 
-
     /// @notice Returns the ERC20 asset token used for deposits.
     /// @return The ERC20 asset token address.
     function depositToken() external view returns (address);
