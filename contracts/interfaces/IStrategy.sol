@@ -15,7 +15,7 @@ interface IStrategy {
     /// @return prize The prize the winner will receive.
     function distribute(address[] memory participants) external returns (address winner, uint256 prize);
 
-    /// @notice Set the address of the YieldSourcePrizePool.
+    /// @notice Sets the address of the YieldSourcePrizePool.
     /// @dev Can only be called by PrizeStrategy's owner.
     function setPrizePool(IPrizePool _prizePool) external;
 
