@@ -42,6 +42,6 @@ interface IPrizePool {
     function getInterest() external view returns (uint256);
 
     /// @notice Returns the address of the token used for deposits.
-    /// @return Address of the deposit token
+    /// @return Address of the deposit token.
     function getToken() external view returns (IERC20);
 }
