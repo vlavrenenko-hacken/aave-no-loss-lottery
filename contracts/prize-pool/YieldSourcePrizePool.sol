@@ -31,7 +31,10 @@ contract YieldSourcePrizePool is IPrizePool, ReentrancyGuard  {
     /// @notice Address of the lottery contract.
     ILottery public immutable lottery;
 
-    /// @dev Emitted when the contract is deployed
+    /// @dev Emitted when the contract is deployed.
+    /// @param yieldSource Address of the yield source.
+    /// @param prizeStrategy Address of the PrizeStrategy contract.
+    /// @param lottery Address of the Lottery contract.
     event Deployed(address indexed yieldSource, address indexed prizeStrategy, address indexed lottery);
 
     /// @notice Deploy the YieldSourcePrizePool contract.
