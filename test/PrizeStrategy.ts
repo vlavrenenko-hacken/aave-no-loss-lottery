@@ -22,8 +22,7 @@ describe("PrizeStrategy Test", function () {
     await yieldSourcePrizePool.deployed();
 
     await aTokenYieldSource.transferOwnership(yieldSourcePrizePool.address);
-    await prizeStrategy.connect(owner).transferOwnership(lottery.address);
-
+    await prizeStrategy.setLottery(lottery.address);
     const dai = await ethers.getContractAt(IERC20.abi, DAI_ADDR);
 
     await network.provider.request({
@@ -35,8 +34,8 @@ describe("PrizeStrategy Test", function () {
   }
 
   it("Deployment", async function() {
-    const {yieldSourcePrizePool, prizeStrategy, lottery} = await loadFixture(deployFixture);
-    await prizeStrategy.connect(lottery).setPrizePool(yieldSourcePrizePool.address);
+    const {yieldSourcePrizePool, prizeStrategy} = await loadFixture(deployFixture);
+    await prizeStrategy.setPrizePool(yieldSourcePrizePool.address);
     expect(await prizeStrategy.getPrizePool()).to.eq(yieldSourcePrizePool.address);
   });
 
@@ -73,10 +72,10 @@ describe("PrizeStrategy Test", function () {
     // Revert: PrizeStrategy/prizePool-address-not-zero
     await expect(prizeStrategy.connect(lottery).distribute(players)).to.be.revertedWith("PrizeStrategy/prizePool-address-not-zero");
     
-    // Revert: Ownable: caller is not the owner
-    await expect(prizeStrategy.connect(owner).distribute(players)).to.be.revertedWith("Ownable: caller is not the owner");
+    // Revert: PrizeStrategy/not-lottery
+    await expect(prizeStrategy.connect(owner).distribute(players)).to.be.revertedWith("PrizeStrategy/not-lottery");
 
-    await prizeStrategy.connect(lottery).setPrizePool(yieldSourcePrizePool.address);
+    await prizeStrategy.setPrizePool(yieldSourcePrizePool.address);
     const [winner, prize] = await prizeStrategy.connect(lottery).callStatic.distribute(players);
     expect(players).to.contain(winner);    
     expect(prize).to.greaterThan(ethers.constants.Zero);
@@ -86,7 +85,7 @@ describe("PrizeStrategy Test", function () {
   it("Should get the prize in 2 weeks", async function() {
     const {yieldSourcePrizePool, prizeStrategy, lottery, dai_whale, dai} = await loadFixture(deployFixture);
 
-    await prizeStrategy.connect(lottery).setPrizePool(yieldSourcePrizePool.address);
+    await prizeStrategy.setPrizePool(yieldSourcePrizePool.address);
 
     await dai.connect(dai_whale).transfer(yieldSourcePrizePool.address, SUPPLY_TOKENS);
 
@@ -99,12 +98,25 @@ describe("PrizeStrategy Test", function () {
   it("Should set prizePool address", async function () {
     const {owner, prizeStrategy, lottery} = await loadFixture(deployFixture);
     const [, , ,prizePoolTestAddr] = await ethers.getSigners();
-    await prizeStrategy.connect(lottery).setPrizePool(prizePoolTestAddr.address);
+    await prizeStrategy.setPrizePool(prizePoolTestAddr.address);
 
     // Revert: PrizeStrategy/_prizePool-address-not-zero
-    await expect(prizeStrategy.connect(lottery).setPrizePool(ethers.constants.AddressZero)).to.be.revertedWith("PrizeStrategy/_prizePool-address-not-zero");
+    await expect(prizeStrategy.setPrizePool(ethers.constants.AddressZero)).to.be.revertedWith("PrizeStrategy/_prizePool-address-not-zero");
     
     // Revert: Ownable: caller is not the owner
-    await expect(prizeStrategy.connect(owner).setPrizePool(prizePoolTestAddr.address)).to.be.revertedWith("Ownable: caller is not the owner");
+    await expect(prizeStrategy.connect(lottery).setPrizePool(prizePoolTestAddr.address)).to.be.revertedWith("Ownable: caller is not the owner");
+  })
+
+  it("Should set lottery address", async function () {
+    const {prizeStrategy, lottery} = await loadFixture(deployFixture);
+    const [, , ,lotteryAddress] = await ethers.getSigners();
+    await prizeStrategy.setLottery(lotteryAddress.address);
+    expect(await prizeStrategy.getLottery()).to.eq(lotteryAddress.address);
+    
+    // Revert: Ownable: caller is not the owner
+    await expect(prizeStrategy.connect(lottery).setLottery(ethers.constants.AddressZero)).to.be.revertedWith("Ownable: caller is not the owner");
+
+    // Revert: PrizeStrategy/_lottery-address-not-zero
+    await expect(prizeStrategy.setLottery(ethers.constants.AddressZero)).to.be.revertedWith("PrizeStrategy/_lottery-address-not-zero");
   })
 });
