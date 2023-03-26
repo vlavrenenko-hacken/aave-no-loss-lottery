@@ -20,6 +20,12 @@ contract LotteryFactory is Ownable {
     address[] public allLotteries;
 
     /// @dev Emitted when a new lottery is created.
+    /// @param owner Address of the owner of the LotteryFactory contract.
+    /// @param lottery Address of the created lottery.
+    /// @param tokenAddress Address of the token used for deposits.
+    /// @param ticketPrice Price that must be paid to participate in a lottery.
+    /// @param interval The time how long a lottery will last
+    
     event LotteryCreated(
         address indexed owner,
         address indexed lottery,
