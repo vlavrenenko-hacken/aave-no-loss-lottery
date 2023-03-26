@@ -1,0 +1,17 @@
+const DAI_ADDR = process.env.DAI_ADDR;
+
+const AAVE_POOL_ADDRESS_PROVIDER = process.env.AAVE_POOL_ADDRESS_PROVIDER;
+const DAI_WHALE = process.env.DAI_WHALE;
+const POOL_ADDR = process.env.POOL_ADDR;
+const aDAI_ADDR = process.env.aDAI_ADDR;
+const INCENTIVES_CONTROLLER = process.env.INCENTIVES_CONTROLLER;
+const AAVE_PROTOCOL_DATA_PROVIDER = process.env.AAVE_PROTOCOL_DATA_PROVIDER;
+
+module.exports = {
+    DAI_ADDR,
+    aDAI_ADDR,
+    DAI_WHALE,
+    AAVE_POOL_ADDRESS_PROVIDER,
+    POOL_ADDR,
+    AAVE_PROTOCOL_DATA_PROVIDER
+}
