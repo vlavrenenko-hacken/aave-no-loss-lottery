@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "@aave/core-v3/contracts/interfaces/IPool.sol";
@@ -14,7 +13,7 @@ import {ATokenInterface, IAToken} from "../interfaces/ATokenInterface.sol";
 import "../interfaces/IYieldSource.sol";
 import "hardhat/console.sol";
 
-contract ATokenYieldSource is ERC20, Ownable, ReentrancyGuard, IYieldSource {
+contract ATokenYieldSource is ERC20, Ownable, IYieldSource {
     
     /// @notice SafeERC20 for tokens having IERC20 implemented.
     using SafeERC20 for IERC20;
@@ -146,7 +145,7 @@ contract ATokenYieldSource is ERC20, Ownable, ReentrancyGuard, IYieldSource {
   /// @dev Asset tokens are supplied to the yield source, then deposited into Aave
   /// @param mintAmount The amount of asset tokens to be supplied
   /// @param to The user whose balance will receive the tokens
-  function supplyTokenTo(address from, address to, uint256 mintAmount) external onlyOwner nonReentrant {
+  function supplyTokenTo(address from, address to, uint256 mintAmount) external onlyOwner {
     require(from != address(0), "ATokenYieldSource/sender-not-zero-address");
     require(to != address(0), "ATokenYieldSource/receiver-not-zero-address");
     _requireTokensGTZero(mintAmount);
@@ -161,7 +160,7 @@ contract ATokenYieldSource is ERC20, Ownable, ReentrancyGuard, IYieldSource {
   /// @dev Shares corresponding to the number of tokens withdrawn are burnt from the user's balance
   /// @dev Asset tokens are withdrawn from Aave, then transferred from the yield source to the user's wallet
   /// @param redeemAmount The amount of asset tokens to be redeemed
-function redeemToken(address from, address to, uint256 redeemAmount) external onlyOwner nonReentrant {
+function redeemToken(address from, address to, uint256 redeemAmount) external onlyOwner {
     require(from != address(0), "ATokenYieldSource/sender-not-zero-address");
     require(to != address(0), "ATokenYieldSource/receiver-not-zero-address");
     _requireTokensGTZero(redeemAmount);
