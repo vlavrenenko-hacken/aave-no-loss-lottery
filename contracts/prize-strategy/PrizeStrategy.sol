@@ -9,10 +9,10 @@ import "../interfaces/ILottery.sol";
 
 contract PrizeStrategy is IStrategy, Ownable {
     
-    ///@notice PrizePool address. 
+    /// @notice PrizePool address. 
     IPrizePool prizePool;
 
-    // @notice Lottery address.
+    /// @notice Lottery address.
     ILottery lottery;
 
     /**
