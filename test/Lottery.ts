@@ -1,7 +1,7 @@
 import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers, network } from "hardhat";
-import {DAI_ADDR, aDAI_ADDR, DAI_WHALE, AAVE_POOL_ADDRESS_PROVIDER, POOL_ADDR} from "./config.js";
+import {DAI_ADDR, aDAI_ADDR, DAI_WHALE, AAVE_POOL_ADDRESS_PROVIDER} from "./config.js";
 import IERC20 from "../artifacts/@openzeppelin/contracts/token/ERC20/IERC20.sol/IERC20.json";
 
 describe("Lottery Test", function () {
