@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 import "../interfaces/IStrategy.sol";
+import "../interfaces/IPrizePool.sol";
 
 /** @title  ILottery
   * @author vvlnko
