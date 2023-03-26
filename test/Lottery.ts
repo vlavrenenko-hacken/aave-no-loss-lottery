@@ -71,7 +71,7 @@ describe("Lottery Test", function () {
         await expect(lotteryProxy.setPrizeStrategy(ethers.constants.AddressZero)).to.be.revertedWith("Lottery: strategy-address-not-zero");
 
         await aTokenYieldSource.transferOwnership(yieldSourcePrizePool.address);
-        await prizeStrategy.transferOwnership(lotteryProxy.address);
+        await prizeStrategy.setLottery(lotteryProxy.address);
         
         return {owner, aTokenYieldSource, yieldSourcePrizePool, prizeStrategy, lotteryProxy, lotteryFactory, dai_whale, dai};
       }
