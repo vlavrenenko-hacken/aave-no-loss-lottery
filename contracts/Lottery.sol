@@ -67,6 +67,14 @@ contract Lottery is ILottery {
     /// @param amount The amount of deposited funds.
     event Deposited(address player, uint amount);
 
+    /**
+     * @dev Throws if called by any account other than the owner.
+     */
+    modifier onlyOwner {
+        require(msg.sender == owner, "Lottery: not-owner");
+        _;
+    }
+
     /// @notice The initialize function is used to initialize the Lottery with the necessary data.
     /// @dev The function is called only once by the LotteryFactory via the MinimalProxy
     /// @param _owner The owner of the lottery
@@ -80,15 +88,6 @@ contract Lottery is ILottery {
         lotteryFactory = msg.sender;
         ticketPrice = _ticketPrice;
         interval = _interval;
-    }
-
-
-    /**
-     * @dev Throws if called by any account other than the owner.
-     */
-    modifier onlyOwner {
-        require(msg.sender == owner, "Lottery: not-owner");
-        _;
     }
 
     /// @notice Sets the address of the PrizePool contract.
