@@ -12,11 +12,22 @@ contract PrizeStrategy is IStrategy, Ownable {
     ///@notice PrizePool address. 
     IPrizePool prizePool;
 
+    // @notice Lottery address.
+    ILottery lottery;
+
+    /**
+     * @dev Throws if called by any account other than the Lottery.
+     */
+    modifier onlyLottery {
+        require(msg.sender == address(lottery), "PrizeStrategy/not-lottery");
+        _;
+    }
+
     /// @notice Distributes the prize to the winner of the lottery.
-    /// @dev Selects a random winner from the passed list of participants and transfer the prize to the winner.
+    /// @dev Selects a random winner from the passed list of participants and transfer the prize to the winner. Can only be called by the Lottery.
     /// @return winner The winner of the lottery.
     /// @return prize The prize the winner will receive.
-    function distribute(address[] memory participants) external onlyOwner returns (address winner, uint256 prize) {
+    function distribute(address[] memory participants) external onlyLottery returns (address winner, uint256 prize) {
         require(address(prizePool) != address(0), "PrizeStrategy/prizePool-address-not-zero");
         prizePool.claimInterest();
         IERC20 prizeToken = prizePool.getToken();
@@ -32,10 +43,24 @@ contract PrizeStrategy is IStrategy, Ownable {
         prizePool = _prizePool;
     }
 
+    /// @notice Set the address of the Lottery.
+    /// @dev Can only be called PrizeStrategy's owner.
+    function setLottery(ILottery _lottery) external onlyOwner {
+        require(address(_lottery) != address(0), "PrizeStrategy/_lottery-address-not-zero");
+        lottery = _lottery;
+    }
+
     /// @notice Returns the address of the PrizePool contract.
     /// @return The address of the PrizePool contract.
     function getPrizePool() external view returns (IPrizePool) {
         return prizePool;
+    }
+
+    /// @notice Returns the address of the Lottery contract.
+    /// @dev New lottery can be created, so the address should be changed.
+    /// @return The address of the Lottery contract.
+    function getLottery() external view returns (ILottery) {
+        return lottery;
     }
 
     /// @notice Returns the potential prize of the lottery.
