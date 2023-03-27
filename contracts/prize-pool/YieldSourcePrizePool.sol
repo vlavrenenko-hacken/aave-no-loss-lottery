@@ -4,7 +4,6 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/IYieldSource.sol";
 import "../interfaces/IPrizePool.sol";
@@ -15,7 +14,7 @@ import "../interfaces/ILottery.sol";
   * @author vvlnko
   * @notice The YieldSourcePrizePool contract to interact with the yieldSource.
 */
-contract YieldSourcePrizePool is IPrizePool, ReentrancyGuard  {
+contract YieldSourcePrizePool is IPrizePool, Ownable {
     /// @notice SafeERC20 library for safe ERC20 interactions.
     using SafeERC20 for IERC20;
 
@@ -29,7 +28,7 @@ contract YieldSourcePrizePool is IPrizePool, ReentrancyGuard  {
     IStrategy public immutable prizeStrategy;
 
     /// @notice Address of the lottery contract.
-    ILottery public immutable lottery;
+    ILottery public lottery;
 
     /// @dev Emitted when the contract is deployed.
     /// @param yieldSource Address of the yield source.
@@ -70,7 +69,7 @@ contract YieldSourcePrizePool is IPrizePool, ReentrancyGuard  {
     /// @dev Can only be called by the Lottery.
     /// @param to The address receiving the shares.
     /// @param amount The amount of assets to deposit.
-    function depositTo(address to, uint256 amount) external onlyLottery nonReentrant {
+    function depositTo(address to, uint256 amount) external onlyLottery {
         require(to != address(0), "YieldSourcePrizePool/to-not-zero-address");
         _requireTokensGTZero(amount);
         IERC20(this.getToken()).safeApprove(address(yieldSource), amount);
@@ -82,7 +81,7 @@ contract YieldSourcePrizePool is IPrizePool, ReentrancyGuard  {
     /// @param from The tokens owner's address.
     /// @param to The address receiving a specific number of deposited tokens.
     /// @param amount The number of tokens to be withdrawn.
-    function withdrawFrom(address from, address to, uint256 amount) external onlyLottery nonReentrant {
+    function withdrawFrom(address from, address to, uint256 amount) external onlyLottery {
         require(from != address(0), "YieldSourcePrizePool/from-not-zero-address");
         require(to != address(0), "YieldSourcePrizePool/to-not-zero-address");
         _requireTokensGTZero(amount);
@@ -91,8 +90,15 @@ contract YieldSourcePrizePool is IPrizePool, ReentrancyGuard  {
 
     /// @notice Claim interest accrued from deposits to the YieldSource.
     /// @dev Can only be called by the PrizeStrategy contract.
-    function claimInterest() onlyStrategy nonReentrant external {
+    function claimInterest() onlyStrategy external {
         yieldSource.withdrawInterest(msg.sender);
+    }
+
+    /// @notice Set the address of the Lottery.
+    /// @dev Can only be called PrizeStrategy's owner.
+    function setLottery(ILottery _lottery) external onlyOwner {
+        require(address(_lottery) != address(0), "YieldSourcePrizePool/_lottery-address-not-zero");
+        lottery = _lottery;
     }
 
     /// @notice Return the total balance.
