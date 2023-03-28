@@ -96,7 +96,7 @@ describe("PrizeStrategy Test", function () {
   })
 
   it("Should set prizePool address", async function () {
-    const {owner, prizeStrategy, lottery} = await loadFixture(deployFixture);
+    const {prizeStrategy, lottery} = await loadFixture(deployFixture);
     const [, , ,prizePoolTestAddr] = await ethers.getSigners();
     await prizeStrategy.setPrizePool(prizePoolTestAddr.address);
 
