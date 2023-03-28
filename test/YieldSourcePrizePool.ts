@@ -80,7 +80,7 @@ describe("YieldSourcePrizePool Test", function () {
   })
 
   it("Should claim interest in 2 weeks", async function() {
-    const {owner, aTokenYieldSource, yieldSourcePrize, prizeStrategy, lottery, dai_whale, dai, aDai} = await loadFixture(deployFixture);
+    const {yieldSourcePrize, prizeStrategy, lottery, dai_whale, dai} = await loadFixture(deployFixture);
     await dai.connect(dai_whale).transfer(yieldSourcePrize.address, SUPPLY_TOKENS);
 
     await yieldSourcePrize.connect(lottery).depositTo(dai_whale.address, SUPPLY_TOKENS);
@@ -92,6 +92,19 @@ describe("YieldSourcePrizePool Test", function () {
     
     // Revert: YieldSourcePrizePool/not-strategy
     await expect(yieldSourcePrize.claimInterest()).to.be.revertedWith("YieldSourcePrizePool/not-strategy");
+  })
+
+  it("Should set the lottery address", async function() {
+    const {yieldSourcePrize, prizeStrategy, lottery, dai_whale, dai} = await loadFixture(deployFixture);
+    const [,notowner , ,lotteryAddr] = await ethers.getSigners();
+    await yieldSourcePrize.setLottery(lotteryAddr.address);
+    expect(await yieldSourcePrize.lottery()).to.eq(lotteryAddr.address);
+
+    // Revert: YieldSourcePrizePool/_lottery-address-not-zero
+    await expect(yieldSourcePrize.setLottery(ethers.constants.AddressZero)).to.be.revertedWith("YieldSourcePrizePool/_lottery-address-not-zero");
+
+    // Revert: Ownable: caller is not the owner
+    await expect(yieldSourcePrize.connect(notowner).setLottery(lotteryAddr.address)).to.be.revertedWith("Ownable: caller is not the owner");
   })
 
 });
