@@ -10,6 +10,7 @@
     "@aave/protocol-v2": "^1.0.1",
     "@openzeppelin/contracts": "^4.8.2",
     "dotenv": "^16.0.3",
-    "npm-check-updates": "^16.7.13"
+    "npm-check-updates": "^16.7.13",
+    "solidity-docgen": "^0.6.0-beta.35"
   }
 }
