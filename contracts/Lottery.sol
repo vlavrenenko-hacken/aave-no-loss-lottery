@@ -16,7 +16,8 @@ contract Lottery is ILottery {
     /// @dev A safe way to use IERC20 interface.
     using SafeERC20 for IERC20;
     /// @dev A mapping that stores the participants of the lottery.
-    /// @return The bool value which indicates whether a user participated in the lottery or not.
+    /// @dev Input. The address of a participator.
+    /// @dev Return. The bool value which indicates whether a user participated in the lottery or not.
     mapping(address => bool) public isParticipated;
 
     /// @dev An array that stores addresses of lottery participants.
